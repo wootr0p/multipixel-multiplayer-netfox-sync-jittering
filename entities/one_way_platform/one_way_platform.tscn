@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcx8dh4k1w53w"]
+
+[ext_resource type="Texture2D" uid="uid://dq6i17rhhc70g" path="res://entities/one_way_platform/one_way_platform.png" id="1_nxmpq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o8543"]
+size = Vector2(192, 32)
+
+[node name="OneWayPlatform" type="StaticBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1.05888e-06, 0.738057, 0.743636, 1)
+texture_filter = 1
+texture_repeat = 2
+texture = ExtResource("1_nxmpq")
+offset = Vector2(96, 16)
+region_enabled = true
+region_rect = Rect2(0, 0, 192, 32)
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(96, 16)
+shape = SubResource("RectangleShape2D_o8543")
+one_way_collision = true
+metadata/_edit_lock_ = true

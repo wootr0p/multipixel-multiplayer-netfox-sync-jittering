@@ -1,0 +1,20 @@
+[gd_resource type="TileSet" load_steps=4 format=3 uid="uid://c3ywy6o3tgxha"]
+
+[ext_resource type="Texture2D" uid="uid://cfynp4qxe6rfm" path="res://tileset/tileset.png" id="1_1j5w4"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_iq6rn"]
+friction = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_amf6f"]
+texture = ExtResource("1_1j5w4")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/modulate = Color(0, 0.737255, 0.745098, 1)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[resource]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+physics_layer_0/collision_mask = 0
+physics_layer_0/physics_material = SubResource("PhysicsMaterial_iq6rn")
+sources/0 = SubResource("TileSetAtlasSource_amf6f")

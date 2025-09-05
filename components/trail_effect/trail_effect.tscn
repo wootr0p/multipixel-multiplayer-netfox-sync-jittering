@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cux1ax7yvnpiq"]
+
+[ext_resource type="Script" uid="uid://c8u4ca4ann30u" path="res://components/trail_effect/trail_effect.gd" id="1_c25w5"]
+
+[sub_resource type="Curve" id="Curve_c25w5"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_c25w5"]
+properties/0/path = NodePath(".:is_active")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="TrailEffect" type="Line2D"]
+width = 3.0
+width_curve = SubResource("Curve_c25w5")
+script = ExtResource("1_c25w5")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_c25w5")

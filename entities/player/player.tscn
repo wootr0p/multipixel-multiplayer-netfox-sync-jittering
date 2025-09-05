@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3 uid="uid://ddet1530l3hqv"]
+
+[ext_resource type="Texture2D" uid="uid://dfc8nnx3a6ck6" path="res://entities/player/player.png" id="1_oul6g"]
+[ext_resource type="Script" uid="uid://n0ij2n16fqf7" path="res://entities/player/player.gd" id="1_rkbax"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_fkugw"]
+[ext_resource type="Script" uid="uid://q04ovycdo2of" path="res://entities/player/player_input.gd" id="2_sglur"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_8fjmc"]
+[ext_resource type="PackedScene" uid="uid://cux1ax7yvnpiq" path="res://components/trail_effect/trail_effect.tscn" id="4_bls4j"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sglur"]
+properties/0/path = NodePath(".:global_position")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sglur"]
+radius = 16.0
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_rkbax")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_sglur")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("2_fkugw")
+root = NodePath("..")
+state_properties = Array[String]([":position", ":velocity"])
+input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:input_jump", "PlayerInput:input_dash"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("3_8fjmc")
+root = NodePath("..")
+properties = Array[String]([":position", ":velocity"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="PlayerInput" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_sglur")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="TrailEffect" parent="Visual" instance=ExtResource("4_bls4j")]
+unique_name_in_owner = true
+width = 12.0
+
+[node name="Sprite" type="Sprite2D" parent="Visual"]
+modulate = Color(0, 0.45098, 0.8, 1)
+texture = ExtResource("1_oul6g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_sglur")
