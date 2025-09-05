@@ -43,12 +43,12 @@ var current_spawn_point: Vector2
 var target_position: Vector2
 
 # --- Timers ---
-var jump_buffer_t := 0.0
-var dash_buffer_t := 0.0
-var min_jump_t := 0.0
-var coyote_t := 0.0
-var dash_cooldown_t := 0.0
-var dash_duration_t := 0.0
+#var jump_buffer_t := 0.0
+#var dash_buffer_t := 0.0
+#var coyote_t := 0.0
+#var min_jump_t := 0.0
+#var dash_cooldown_t := 0.0
+#var dash_duration_t := 0.0
 
 var jump_just_pressed: bool = false
 var jump_prev_value: float = 0.0
@@ -87,69 +87,75 @@ func _rollback_tick(delta, tick, is_fresh):
 	velocity /= NetworkTime.physics_factor
 
 func _tick_timers(delta: float) -> void:
-	jump_buffer_t = max(0.0, jump_buffer_t - delta)
-	dash_buffer_t = max(0.0, dash_buffer_t - delta)
-	coyote_t = max(0.0, coyote_t - delta)
-	dash_cooldown_t = max(0.0, dash_cooldown_t - delta)
-	dash_duration_t = max(0.0, dash_duration_t - delta)
-	min_jump_t += delta
+	#jump_buffer_t = max(0.0, jump_buffer_t - delta)
+	#dash_buffer_t = max(0.0, dash_buffer_t - delta)
+	#coyote_t = max(0.0, coyote_t - delta)
+	#dash_cooldown_t = max(0.0, dash_cooldown_t - delta)
+	#dash_duration_t = max(0.0, dash_duration_t - delta)
+	#min_jump_t += delta
+	pass
 
 func apply_input(input_direction: Vector2, want_jump: bool, jump_release: bool, want_dash: bool, delta: float) -> void:
-	trail_effect.is_active = dash_duration_t > 0.0
+	#trail_effect.is_active = dash_duration_t > 0.0
 	
-	if want_dash:
-		dash_buffer_t = DASH_BUFFER_TIMER
-	if want_jump:
-		jump_buffer_t = JUMP_BUFFER_TIMER
+	#if want_dash:
+		#dash_buffer_t = DASH_BUFFER_TIMER
+	#if want_jump:
+		#jump_buffer_t = JUMP_BUFFER_TIMER
 	
-	if jump_release and min_jump_t >= MIN_JUMP_TIME:
+	#if jump_release and min_jump_t >= MIN_JUMP_TIME:
+	if jump_release:
 		if velocity.y < 0:
 			velocity.y *= 0.4
 
 	
 	if is_on_ground():
 		can_dash = true
-		coyote_t = COYOTE_TIMER
+		#coyote_t = COYOTE_TIMER
 
-	if dash_duration_t <= 0.0:
+	#if dash_duration_t <= 0.0:
 		# not dash state
 		
-		var target_velocity_x = input_direction.x * MOVE_VELOCITY
-		if input_direction.x != 0:
-			velocity.x = move_toward(velocity.x, target_velocity_x, ACCELERATION * delta)
-		else:
-			velocity.x = move_toward(velocity.x, 0.0, DECCELERATION * delta)
-
-		if not is_on_ground():
-			if velocity.y < 0:
-				velocity.y += GRAVITY * delta
-			else:
-				velocity.y += FALL_GRAVITY * delta
-
-		if jump_buffer_t > 0.0 and (is_on_ground() or coyote_t > 0.0):
-			velocity.y = -JUMP_VELOCITY
-			jump_buffer_t = 0.0
-			coyote_t = 0.0
-			min_jump_t = 0.0
+	var target_velocity_x = input_direction.x * MOVE_VELOCITY
+	if input_direction.x != 0:
+		velocity.x = move_toward(velocity.x, target_velocity_x, ACCELERATION * delta)
 	else:
-		# dash state
-		
-		if input_direction == Vector2.ZERO:
-			velocity = Vector2.UP * DASH_VELOCITY
-		else:
-			velocity = input_direction.normalized() * DASH_VELOCITY
+		velocity.x = move_toward(velocity.x, 0.0, DECCELERATION * delta)
 
-	if dash_buffer_t > 0.0:
+	if not is_on_ground():
+		if velocity.y < 0:
+			velocity.y += GRAVITY * delta
+		else:
+			velocity.y += FALL_GRAVITY * delta
+
+	#if jump_buffer_t > 0.0 and (is_on_ground() or coyote_t > 0.0):
+	if want_jump && is_on_ground():
+		velocity.y = -JUMP_VELOCITY
+		#jump_buffer_t = 0.0
+		#coyote_t = 0.0
+		#min_jump_t = 0.0
+	#else:
+		## dash state
+		#
+		#if input_direction == Vector2.ZERO:
+			#velocity = Vector2.UP * DASH_VELOCITY
+		#else:
+			#velocity = input_direction.normalized() * DASH_VELOCITY
+
+	#if dash_buffer_t > 0.0:
+	if want_dash:
 		handle_dash(input_direction)
-		dash_buffer_t = 0.0
+		#dash_buffer_t = 0.0
 
 	handle_walljump(want_jump)
 
 func handle_dash(input_direction: Vector2) -> void:
-	if dash_cooldown_t > 0.0 or not can_dash:
+	#if dash_cooldown_t > 0.0 or not can_dash:
+	if !can_dash:
 		return
-	dash_cooldown_t = DASH_COOLDOWN_TIMER
-	dash_duration_t = DASH_TIME
+		
+	#dash_cooldown_t = DASH_COOLDOWN_TIMER
+	#dash_duration_t = DASH_TIME
 	var dash_dir = input_direction
 	if dash_dir == Vector2.ZERO:
 		dash_dir = Vector2.UP
@@ -181,9 +187,9 @@ func handle_walljump(want_jump: bool) -> void:
 	
 
 func local_reset_player():
-	dash_buffer_t = 0.0
-	jump_buffer_t = 0.0
-	dash_duration_t = 0.0
+	#dash_buffer_t = 0.0
+	#jump_buffer_t = 0.0
+	#dash_duration_t = 0.0
 	trail_effect.is_active = false
 	velocity = Vector2.ZERO
 	set_physics_process(false)
