@@ -1,6 +1,6 @@
 # Multiplayer Test Project
 
-This is a small test project built with **Godot 4.4.1** and **NetFox 1.25.3**.
+This is a small test project built with **Godot 4.4.1** and **NetFox 1.25.3** with some jittering problems also with 0ms of lag (local).
 
 ---
 
