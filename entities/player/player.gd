@@ -50,13 +50,14 @@ var target_position: Vector2
 #var dash_cooldown_t := 0.0
 #var dash_duration_t := 0.0
 
-var jump_just_pressed: bool = false
-var jump_prev_value: float = 0.0
-var dash_just_pressed: bool = false
-var dash_prev_value: float = 0.0
-var can_dash: bool = false
-var wall_jump_left: bool = false
-var wall_jump_right: bool = false
+#var jump_just_pressed: bool = false
+#var jump_prev_value: float = 0.0
+#var dash_just_pressed: bool = false
+#var dash_prev_value: float = 0.0
+
+#var can_dash: bool = false
+#var wall_jump_left: bool = false
+#var wall_jump_right: bool = false
 var camera: LevelCamera
 
 func _ready() -> void:
@@ -73,14 +74,14 @@ func _ready() -> void:
 		camera.follow = self
 
 func _rollback_tick(delta, tick, is_fresh):
-	_tick_timers(delta)
+	#_tick_timers(delta)
 	
-	jump_just_pressed = (player_input.input_jump >= 0.5 and jump_prev_value < 0.5)
-	jump_prev_value = player_input.input_jump
-	dash_just_pressed = (player_input.input_dash >= 0.5 and dash_prev_value < 0.5)
-	dash_prev_value = player_input.input_dash
+	#jump_just_pressed = (player_input.input_jump >= 0.5 and jump_prev_value < 0.5)
+	#jump_prev_value = player_input.input_jump
+	#dash_just_pressed = (player_input.input_dash >= 0.5 and dash_prev_value < 0.5)
+	#dash_prev_value = player_input.input_dash
 	
-	apply_input(player_input.input_dir, jump_just_pressed, player_input.input_jump < 0.5, dash_just_pressed, delta)
+	apply_input(player_input.input_dir, player_input.input_jump >= 0.5, player_input.input_jump < 0.5, player_input.input_dash >= 0.5, delta)
 	
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
@@ -109,8 +110,8 @@ func apply_input(input_direction: Vector2, want_jump: bool, jump_release: bool, 
 			velocity.y *= 0.4
 
 	
-	if is_on_ground():
-		can_dash = true
+	#if is_on_ground():
+		#can_dash = true
 		#coyote_t = COYOTE_TIMER
 
 	#if dash_duration_t <= 0.0:
@@ -144,15 +145,16 @@ func apply_input(input_direction: Vector2, want_jump: bool, jump_release: bool, 
 
 	#if dash_buffer_t > 0.0:
 	if want_dash:
-		handle_dash(input_direction)
+		pass
+		#handle_dash(input_direction)
 		#dash_buffer_t = 0.0
 
 	handle_walljump(want_jump)
 
 func handle_dash(input_direction: Vector2) -> void:
 	#if dash_cooldown_t > 0.0 or not can_dash:
-	if !can_dash:
-		return
+	#if !can_dash:
+		#return
 		
 	#dash_cooldown_t = DASH_COOLDOWN_TIMER
 	#dash_duration_t = DASH_TIME
@@ -160,29 +162,32 @@ func handle_dash(input_direction: Vector2) -> void:
 	if dash_dir == Vector2.ZERO:
 		dash_dir = Vector2.UP
 	velocity = dash_dir.normalized() * DASH_VELOCITY
-	can_dash = false
+	#can_dash = false
 
 func handle_walljump(want_jump: bool) -> void:
 	if is_on_ground():
-		wall_jump_left = false
-		wall_jump_right = false
+		pass
+		#wall_jump_left = false
+		#wall_jump_right = false
 
 	if is_on_wall_left():
 		velocity.y *= WALL_JUMP_SLIPPERY
-		if want_jump and not wall_jump_left:
+		#if want_jump and not wall_jump_left:
+		if want_jump:
 			velocity.y = -WALL_JUMP_VELOCITY
 			velocity.x = WALL_JUMP_BOUNCE_SPEED
-			wall_jump_left = true
-			wall_jump_right = false
+			#wall_jump_left = true
+			#wall_jump_right = false
 			return
 
 	if is_on_wall_right():
 		velocity.y *= WALL_JUMP_SLIPPERY
-		if want_jump and not wall_jump_right:
+		#if want_jump and not wall_jump_right:
+		if want_jump:
 			velocity.y = -WALL_JUMP_VELOCITY
 			velocity.x = -WALL_JUMP_BOUNCE_SPEED
-			wall_jump_right = true
-			wall_jump_left = false
+			#wall_jump_right = true
+			#wall_jump_left = false
 			return
 	
 
