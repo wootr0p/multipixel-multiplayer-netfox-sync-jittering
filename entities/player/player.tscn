@@ -25,7 +25,7 @@ replication_config = SubResource("SceneReplicationConfig_sglur")
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("2_fkugw")
 root = NodePath("..")
-state_properties = Array[String]([":position", ":velocity"])
+state_properties = Array[String]([":position", ":velocity", ":can_dash", ":wall_jump_left", ":wall_jump_right", ":jump_buffer_t", ":dash_buffer_t", ":coyote_t", ":dash_cooldown_t", ":dash_duration_t", ":jump_prev_value", ":dash_prev_value", ":min_jump_t"])
 input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:input_jump", "PlayerInput:input_dash"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 

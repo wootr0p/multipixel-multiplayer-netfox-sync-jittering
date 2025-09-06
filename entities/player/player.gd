@@ -36,6 +36,7 @@ const MIN_JUMP_TIME := 0.06  # secondi minimi di salto
 @onready var rollback_synchronizer: RollbackSynchronizer = $RollbackSynchronizer
 @onready var trail_effect: TrailEffect = %TrailEffect
 @onready var visual: Node2D = $Visual
+var camera: LevelCamera
 
 var is_owner: bool = false
 var is_server: bool = false
@@ -45,19 +46,17 @@ var target_position: Vector2
 # --- Timers ---
 var jump_buffer_t := 0.0
 var dash_buffer_t := 0.0
-var min_jump_t := 0.0
 var coyote_t := 0.0
 var dash_cooldown_t := 0.0
 var dash_duration_t := 0.0
+var min_jump_t := 0.0
 
-var jump_just_pressed: bool = false
 var jump_prev_value: float = 0.0
-var dash_just_pressed: bool = false
 var dash_prev_value: float = 0.0
 var can_dash: bool = false
 var wall_jump_left: bool = false
 var wall_jump_right: bool = false
-var camera: LevelCamera
+
 
 func _ready() -> void:
 	rollback_synchronizer.process_settings()
@@ -75,9 +74,9 @@ func _ready() -> void:
 func _rollback_tick(delta, tick, is_fresh):
 	_tick_timers(delta)
 	
-	jump_just_pressed = (player_input.input_jump >= 0.5 and jump_prev_value < 0.5)
+	var jump_just_pressed := (player_input.input_jump >= 0.5 and jump_prev_value < 0.5)
 	jump_prev_value = player_input.input_jump
-	dash_just_pressed = (player_input.input_dash >= 0.5 and dash_prev_value < 0.5)
+	var dash_just_pressed := (player_input.input_dash >= 0.5 and dash_prev_value < 0.5)
 	dash_prev_value = player_input.input_dash
 	
 	apply_input(player_input.input_dir, jump_just_pressed, player_input.input_jump < 0.5, dash_just_pressed, delta)
